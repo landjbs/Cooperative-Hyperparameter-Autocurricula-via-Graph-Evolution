@@ -11,11 +11,11 @@ torch.manual_seed(random_seed)
 
 
 class Model(nn.Module):
-  def __init__(self, id):
+  def __init__(self, id, lr=None):
     super(Model, self).__init__()
     self.id = id
     # initialize hyper params
-    self.init_lr = np.random.uniform(0, 1)
+    self.init_lr = np.random.uniform(0, 1) if not lr else lr
     self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
     self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
     self.conv2_drop = nn.Dropout2d()
@@ -46,7 +46,6 @@ class Model(nn.Module):
     loss = F.nll_loss(y_hat, batch_y)
     loss.backward()
     self.optim.step()
-    self.param_logs['loss'].append(loss.item())
 
   def update_hyperparams(self, new_lr):
     for g in self.optim.param_groups:
@@ -59,4 +58,5 @@ class Model(nn.Module):
     with torch.no_grad():
       y_hat = self(batch_x)
       loss = F.nll_loss(y_hat, batch_y)
+      self.param_logs['loss'].append(loss.item())
     return loss.item()
