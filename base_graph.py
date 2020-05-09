@@ -50,10 +50,12 @@ class Graph(object):
       return np.random.choice(range(self.n),size = n_parents, p=p)
 
   def select_child(self,parent):
-      p = self.adjMat[parent]
-      if sum(p) > 0:
-          child = np.random.choice(range(self.n), p=p)
-      return child
+    p = self.adjMat[parent]
+    if sum(p) > 0:
+      child = np.random.choice(range(self.n), p=p)
+    else:
+      child = None
+    return child
 
   def update_models(self, x_eval_batch, y_eval_batch):
     fitnesses = self.get_normed_fitness(x_eval_batch, y_eval_batch)
