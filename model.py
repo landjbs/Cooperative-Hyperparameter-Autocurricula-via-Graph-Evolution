@@ -11,8 +11,9 @@ torch.manual_seed(random_seed)
 
 
 class Model(nn.Module):
-  def __init__(self):
+  def __init__(self, id):
     super(Model, self).__init__()
+    self.id = id
     # initialize hyper params
     self.init_lr = np.random.uniform(0, 1)
     self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
@@ -25,7 +26,7 @@ class Model(nn.Module):
     self.param_logs = {'lr': []}
 
   def __repr__(self):
-      return 'Model'
+      return f'Model {id}'
 
   def forward(self, x):
     x = F.relu(F.max_pool2d(self.conv1(x), 2))

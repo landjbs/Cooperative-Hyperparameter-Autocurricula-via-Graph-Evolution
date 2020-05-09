@@ -22,14 +22,14 @@ def build_data_loader(is_train, batch_size):
 class Graph(object):
   def __init__(self, n): #train_batch_size, eval_batch_size
     self.n = n
-    self.models = [Model() for model in range(n)]
+    self.models = [Model(id) for id in range(n)]
     train_batch_size = 64
     eval_batch_size = 1000
     # data loading
     self.train_loader = build_data_loader(True, train_batch_size)
     self.eval_loader = build_data_loader(True, eval_batch_size)
     # global param tracking
-    self.global_params = {'mean_lr': []}
+    self.global_params = {'loss': , 'mean_lr': []}
 
   def get_normed_fitness(self, x_batch, y_batch):
     fitnesses = np.array([model.eval(x_batch, y_batch)
@@ -63,6 +63,7 @@ class Graph(object):
       self.log_global_params()
 
   def vis_global_params(self, exclude=[]):
+      ''' Plots all globally-tracked params '''
       for name, buffer in self.global_params.items():
           if name in exclude:
               continue
@@ -73,6 +74,7 @@ class Graph(object):
           plt.show()
 
   def vis_individual_params(self):
+      ''' Plots graphs of each param across nets '''
       for name, buffer in self.models[0].param_logs.items():
           for model in self.models:
               plt.plot(model.param_logs[name], label=str(model))
@@ -80,3 +82,14 @@ class Graph(object):
           plt.ylabel(name)
           plt.legend()
           plt.show()
+
+  def vis_all_single_net(self, id, exclude=[]):
+      ''' Plots all params of net with id=id on single graph '''
+      model = self.models[id]
+      for name, buffer in model.param_logs.items():
+          if name in exclude:
+              continue
+          plt.plot(buffer, label=name)
+      plt.title(f'Params for {model}')
+      plt.xlabel('Iteration')
+      plt.show()
