@@ -21,9 +21,13 @@ def build_data_loader(is_train, batch_size):
 
 
 class Graph(object):
-  def __init__(self, n, train_batch_size=64, eval_batch_size=64):
+  def __init__(self, n, type, flag, train_batch_size=64, eval_batch_size=64):
+    # ad
     self.n = n
     self.models = [Model(id) for id in range(n)]
+    # graph
+    (self.adjMat,
+     self.childrenList) = generate_graph(n, type=type, flag=flag)
     # data loading
     self.train_loader = build_data_loader(True, train_batch_size)
     self.eval_loader = build_data_loader(True, eval_batch_size)
@@ -31,7 +35,6 @@ class Graph(object):
     self.global_params = {'fitness': [], 'mean_lr': []}
 
   def get_normed_fitness(self, x_batch, y_batch, track=False):
-    self.adjMat, self.childrenList = generate_graph(self.n,type=type,flag=flag)
     fitnesses = np.array([1.0 / model.eval(x_batch, y_batch)
                           for model in self.models])
     if track:
@@ -59,6 +62,7 @@ class Graph(object):
 
   def update_models(self, x_eval_batch, y_eval_batch):
     fitnesses = self.get_normed_fitness(x_eval_batch, y_eval_batch, track=True)
+        self.adjMat, self.childrenList =
     # TODO: some selection stuff for updating models prob uses an adj mat
     for model in self.models:
       # select nums
