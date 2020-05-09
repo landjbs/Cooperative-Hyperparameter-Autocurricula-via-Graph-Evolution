@@ -85,7 +85,8 @@ class Graph(object):
         child_param = child_model.fetch_lr()
         child_param = self.get_new_param(parent_param, child_param)
         child_model.update_hyperparams(child_param)
-        child_model.log_hyperparams()
+    for model in self.models:
+        model.log_hyperparams()
     return True
 
   def log_global_params(self):
@@ -148,6 +149,7 @@ class Graph(object):
               continue
           plt.plot(buffer, label=name)
       plt.title(f'Params for {model}')
+      plt.legend()
       plt.xlabel('Iteration')
       if not root:
           plt.show()
