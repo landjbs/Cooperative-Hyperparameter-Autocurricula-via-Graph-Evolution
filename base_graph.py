@@ -25,6 +25,7 @@ class Graph(object):
   def __init__(self, n, type, flag, train_batch_size=60, eval_batch_size=60):
     # models
     self.n = n
+    self.c = 0.3
     self.models = [Model(id) for id in range(n)]
     # graph
     (self.adjMat,
@@ -80,10 +81,10 @@ class Graph(object):
         child = self.select_child(parent)
         chil_model = self.models[child]
         parent_param = self.models[parent].fetch_lr()
-        child_param = childModel.fetch_lr()
+        child_param = child_model.fetch_lr()
         child_param = self.get_new_param(parent_param, child_param)
-        childModel.update_hyperparams(child_param)
-        model.log_hyperparams()
+        child_model.update_hyperparams(child_param)
+        child_model.log_hyperparams()
     return True
 
   def log_global_params(self):
