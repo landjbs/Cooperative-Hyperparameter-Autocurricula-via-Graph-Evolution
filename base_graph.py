@@ -20,16 +20,14 @@ def build_data_loader(is_train, batch_size):
 
 
 class Graph(object):
-  def __init__(self, n): #train_batch_size, eval_batch_size
+  def __init__(self, n, train_batch_size=64, eval_batch_size=64):
     self.n = n
     self.models = [Model(id) for id in range(n)]
-    train_batch_size = 64
-    eval_batch_size = 1000
     # data loading
     self.train_loader = build_data_loader(True, train_batch_size)
     self.eval_loader = build_data_loader(True, eval_batch_size)
     # global param tracking
-    self.global_params = {'loss': , 'mean_lr': []}
+    self.global_params = {'loss': [], 'mean_lr': []}
 
   def get_normed_fitness(self, x_batch, y_batch):
     fitnesses = np.array([model.eval(x_batch, y_batch)
@@ -80,6 +78,7 @@ class Graph(object):
               plt.plot(model.param_logs[name], label=str(model))
           plt.xlabel('Iteration')
           plt.ylabel(name)
+          plt.title(f'{name} Across Networks')
           plt.legend()
           plt.show()
 

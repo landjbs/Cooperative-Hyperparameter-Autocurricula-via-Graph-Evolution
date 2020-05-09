@@ -22,11 +22,10 @@ class Model(nn.Module):
     self.fc1 = nn.Linear(320, 50)
     self.fc2 = nn.Linear(50, 10)
     self.optim = optim.SGD(self.parameters(), lr=self.init_lr)
-    self.losses = []
-    self.param_logs = {'lr': []}
+    self.param_logs = {'loss': [], 'lr': []}
 
   def __repr__(self):
-      return f'Model {id}'
+      return f'Model {self.id}'
 
   def forward(self, x):
     x = F.relu(F.max_pool2d(self.conv1(x), 2))
@@ -44,7 +43,7 @@ class Model(nn.Module):
     loss = F.nll_loss(y_hat, batch_y)
     loss.backward()
     self.optim.step()
-    self.losses.append(loss.item())
+    self.param_logs['loss'].append(loss.item())
 
   def update_hyperparams(self, delta_lr):
     for g in self.optim.param_groups:
