@@ -5,7 +5,7 @@ from tqdm import trange, tqdm
 from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
 import torchvision.transforms as transforms
-from math import log, exp
+from math import log, exp, floor
 
 from model import Model
 from evolution import generate_graph
@@ -27,6 +27,7 @@ class Graph(object):
     self.n = n
     self.c = 0.3
     self.models = [Model(id) for id in range(n)]
+    self.n_parents = floor(n / 3.)
     # graph
     (self.adjMat,
      self.childrenList) = generate_graph(n, type=type, flag=flag)
