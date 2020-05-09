@@ -70,7 +70,7 @@ def updateValue(vertexValues, parent, child, momentum, flag=None):
 sample experiment
 '''
 N = 156
-iter = 2000
+iter = 100
 n = 5
 
 vertexValues = [1 for _ in range(N-1)]
@@ -82,6 +82,6 @@ adjMat, childrenList = generate_graph(N, "Funnel")
 for it in range(iter):
     vertexFitnesses = [value for value in vertexValues]
     # print(vertexFitnesses)
-    run_iteration(vertexValues, vertexMomentums, vertexFitnesses, adjMat, n=100)
+    run_iteration(vertexValues, vertexMomentums, vertexFitnesses, adjMat, n=n)
     print(it)
 print(vertexValues)

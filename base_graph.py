@@ -59,11 +59,13 @@ class Graph(object):
 
   def update_models(self, x_eval_batch, y_eval_batch):
     fitnesses = self.get_normed_fitness(x_eval_batch, y_eval_batch, track=True)
-    # TODO: some selection stuff for updating models prob uses an adj mat
-    for model in self.models:
-      # select nums
-      # model.update_hyperparams(delta_lr=?) ...
-      model.log_hyperparams()
+    parents = self.select_parents(fitnesses,n_parents)
+    for parent in parents:
+        child = self.select_child(parent)
+        parentParam = model.fet
+        childModel = self.models[child]
+        model.update_hyperparams()
+        model.log_hyperparams()
     return True
 
   def log_global_params(self):
