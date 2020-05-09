@@ -32,7 +32,7 @@ class Graph(object):
 
   def get_normed_fitness(self, x_batch, y_batch, track=False):
     self.adjMat, self.childrenList = generate_graph(self.n,type=type,flag=flag)
-    fitnesses = np.array([model.eval(x_batch, y_batch)
+    fitnesses = np.array([1.0 / model.eval(x_batch, y_batch)
                           for model in self.models])
     if track:
         self.global_params['fitness'].append(np.mean(fitnesses))
@@ -44,7 +44,7 @@ class Graph(object):
     return True
 
   def select_parents(self, fitnesses, n_parents):
-      inv_fitnesses = [1.0/fit for fit in fitnesses]
+      inv_fitnesses = [fit for fit in fitnesses]
       fitSum = sum(inv_fitnesses)
       p = [fit/fitSum for fit in inv_fitnesses]
       return np.random.choice(range(self.n),size = n_parents, p=p)
