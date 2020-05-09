@@ -49,11 +49,11 @@ class Graph(object):
       model.step(x_batch, y_batch)
     return True
 
-  def select_parents(self, fitnesses, n_parents):
+  def select_parents(self, fitnesses):
       inv_fitnesses = [fit for fit in fitnesses]
       fitSum = sum(inv_fitnesses)
       p = [fit/fitSum for fit in inv_fitnesses]
-      return np.random.choice(range(self.n),size = n_parents, p=p)
+      return np.random.choice(range(self.n), size=self.n_parents, p=p)
 
   def select_child(self, parent):
     p = self.adjMat[parent]
@@ -77,7 +77,7 @@ class Graph(object):
 
   def update_models(self, x_eval_batch, y_eval_batch):
     fitnesses = self.get_normed_fitness(x_eval_batch, y_eval_batch, track=True)
-    parents = self.select_parents(fitnesses,n_parents)
+    parents = self.select_parents(fitnesses, self.n_parents)
     for parent in parents:
         child = self.select_child(parent)
         chil_model = self.models[child]
