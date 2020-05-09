@@ -72,7 +72,7 @@ class Graph(object):
     delta_param *= self.c
     log_child_param = log(child_param) - log(1 - child_param)
     log_child_param += delta_param
-    child_param = 1.0/(1 + exp(-log_child_param))
+    child_param = 1.0 / (1 + exp(-log_child_param))
     return child_param
 
   def update_models(self, x_eval_batch, y_eval_batch):
@@ -80,7 +80,7 @@ class Graph(object):
     parents = self.select_parents(fitnesses)
     for parent in parents:
         child = self.select_child(parent)
-        chil_model = self.models[child]
+        child_model = self.models[child]
         parent_param = self.models[parent].fetch_lr()
         child_param = child_model.fetch_lr()
         child_param = self.get_new_param(parent_param, child_param)
@@ -91,7 +91,7 @@ class Graph(object):
   def log_global_params(self):
     lr_buffer = []
     for model in self.models:
-      lr_buffer.append(model.param_logs['lr'])
+      lr_buffer.append(model.param_logs['lr'][-1])
     self.global_params['mean_lr'].append(np.mean(lr_buffer))
     return True
 
@@ -104,7 +104,7 @@ class Graph(object):
       self.log_global_params()
     return True
 
-  def vis_global_params(self, exclude=[]):
+  def vis_global_params(self, root=None, exclude=[]):
       ''' Plots all globally-tracked params '''
       for name, buffer in self.global_params.items():
           if name in exclude:
@@ -113,9 +113,11 @@ class Graph(object):
           plt.title(f'Global - {name}')
           plt.xlabel('Iteration')
           plt.ylabel(name)
-          plt.show()
+          plt.savefig(f'{root}/global_params')
+          if not root:
+              plt.show()
 
-  def vis_individual_params(self):
+  def vis_individual_params(self, root=None):
       ''' Plots graphs of each param across nets '''
       for name, buffer in self.models[0].param_logs.items():
           for model in self.models:
@@ -124,9 +126,11 @@ class Graph(object):
           plt.ylabel(name)
           plt.title(f'{name} Across Networks')
           plt.legend()
-          plt.show()
+          plt.savefig(f'{root}/indiv_params_{name}')
+          if not root:
+              plt.show()
 
-  def vis_all_single_net(self, id, exclude=[]):
+  def vis_all_single_net(self, id, root=None, exclude=[]):
       ''' Plots all params of net with id=id on single graph '''
       model = self.models[id]
       for name, buffer in model.param_logs.items():
@@ -135,4 +139,6 @@ class Graph(object):
           plt.plot(buffer, label=name)
       plt.title(f'Params for {model}')
       plt.xlabel('Iteration')
-      plt.show()
+      plt.savefig(f'{root}/model_params_{model}')
+      if not root:
+          plt.show()

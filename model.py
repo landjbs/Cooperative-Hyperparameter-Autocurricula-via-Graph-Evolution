@@ -22,7 +22,7 @@ class Model(nn.Module):
     self.fc1 = nn.Linear(320, 50)
     self.fc2 = nn.Linear(50, 10)
     self.optim = optim.SGD(self.parameters(), lr=self.init_lr)
-    self.param_logs = {'loss': [], 'lr': []}
+    self.param_logs = {'loss': [], 'lr': [self.init_lr]}
 
   def __repr__(self):
       return f'Model {self.id}'
