@@ -53,7 +53,7 @@ class Model(nn.Module):
       g['lr'] = max(0, g['lr'] + delta_lr)
 
   def log_hyperparams(self):
-    self.param_logs['lr'].append(self.optim.param_groups[0]['lr'])
+    self.param_logs['lr'].append(self.fetch_lr())
 
   def eval(self, batch_x, batch_y):
     with torch.no_grad():
