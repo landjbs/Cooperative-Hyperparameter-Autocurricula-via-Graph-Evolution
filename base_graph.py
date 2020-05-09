@@ -5,6 +5,7 @@ from tqdm import trange, tqdm
 from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
 import torchvision.transforms as transforms
+from math import log, exp
 
 from model import Model
 from evolution import generate_graph
@@ -60,14 +61,28 @@ class Graph(object):
       child = None
     return child
 
+  def get_new_param(self, parent_param, child_param):
+    delta_param = (parent_param - child_param)
+    if delta_param > 0:
+        delta_param = 1
+    elif delta_param < 0:
+        delta_param = -1
+    delta_param *= self.c
+    log_child_param = log(child_param) - log(1 - child_param)
+    log_child_param += delta_param
+    child_param = 1.0/(1 + exp(-log_child_param))
+    return child_param
+
   def update_models(self, x_eval_batch, y_eval_batch):
     fitnesses = self.get_normed_fitness(x_eval_batch, y_eval_batch, track=True)
     parents = self.select_parents(fitnesses,n_parents)
     for parent in parents:
         child = self.select_child(parent)
-        parentParam = model.fet
-        childModel = self.models[child]
-        model.update_hyperparams()
+        chil_model = self.models[child]
+        parent_param = self.models[parent].fetch_lr()
+        child_param = childModel.fetch_lr()
+        child_param = self.get_new_param(parent_param, child_param)
+        childModel.update_hyperparams(child_param)
         model.log_hyperparams()
     return True
 
