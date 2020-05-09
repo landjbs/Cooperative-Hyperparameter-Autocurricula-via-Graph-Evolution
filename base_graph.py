@@ -106,6 +106,8 @@ class Graph(object):
 
   def vis_global_params(self, root=None, exclude=[]):
       ''' Plots all globally-tracked params '''
+      if not os.path.exists(root):
+          os.mkdir(root)
       for name, buffer in self.global_params.items():
           if name in exclude:
               continue
@@ -119,6 +121,8 @@ class Graph(object):
 
   def vis_individual_params(self, root=None):
       ''' Plots graphs of each param across nets '''
+      if not os.path.exists(root):
+          os.mkdir(root)
       for name, buffer in self.models[0].param_logs.items():
           for model in self.models:
               plt.plot(model.param_logs[name], label=str(model))
@@ -132,6 +136,8 @@ class Graph(object):
 
   def vis_all_single_net(self, id, root=None, exclude=[]):
       ''' Plots all params of net with id=id on single graph '''
+      if not os.path.exists(root):
+          os.mkdir(root)
       model = self.models[id]
       for name, buffer in model.param_logs.items():
           if name in exclude:
