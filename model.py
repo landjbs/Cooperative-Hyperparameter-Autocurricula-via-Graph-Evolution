@@ -48,9 +48,9 @@ class Model(nn.Module):
     self.optim.step()
     self.param_logs['loss'].append(loss.item())
 
-  def update_hyperparams(self, delta_lr):
+  def update_hyperparams(self, new_lr):
     for g in self.optim.param_groups:
-      g['lr'] = max(0, g['lr'] + delta_lr)
+      g['lr'] = max(0, new_lr)
 
   def log_hyperparams(self):
     self.param_logs['lr'].append(self.fetch_lr())
