@@ -1,3 +1,4 @@
+import os
 import numpy as np
 from tqdm import trange, tqdm
 from torch.utils.data import DataLoader
@@ -8,16 +9,21 @@ from model import Model
 
 
 def build_data_loader(is_train, batch_size):
-    return DataLoader(MNIST('/files/', train=is_train,
-        transform=transforms.Compose([transforms.ToTensor(),
-                    transforms.Normalize((0.1307,), (0.3081,))])),
-        batch_size=batch_size, shuffle=True)
+    download = not os.path.exists('data/MNIST')
+    transform = transforms.Compose([transforms.ToTensor(),
+                                    transforms.Normalize((0.1307,), (0.3081,))
+                                  ])
+    dataset = MNIST('data', train=is_train,
+                    transform=transform, download=download)
+    return DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 
 class Graph(object):
-  def __init__(self, n, train_batch_size, eval_batch_size):
+  def __init__(self, n): #train_batch_size, eval_batch_size
     self.n = n
     self.models = [Model() for model in range(n)]
+    train_batch_size = 64
+    eval_batch_size = 1000
     # data loading
     self.train_loader = build_data_loader(True, train_batch_size)
     self.eval_loader = build_data_loader(True, eval_batch_size)
@@ -46,7 +52,7 @@ class Graph(object):
       lr_buffer.append(model.param_logs['lr'])
     self.global_params['mean_lr'].append(np.mean(lr_buffer))
 
-  def train(steps):
+  def train(self, steps):
     for step in trange(steps, desc='Training'):
       x_train_batch, y_train_batch = next(iter(self.train_loader))
       self.train_models(x_train_batch, y_train_batch)
