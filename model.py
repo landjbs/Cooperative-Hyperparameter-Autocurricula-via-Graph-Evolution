@@ -27,6 +27,9 @@ class Model(nn.Module):
   def __repr__(self):
       return f'Model {self.id}'
 
+  def fetch_lr(self):
+      return self.optim.param_groups[0]['lr']
+
   def forward(self, x):
     x = F.relu(F.max_pool2d(self.conv1(x), 2))
     x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
@@ -50,7 +53,7 @@ class Model(nn.Module):
       g['lr'] = max(0, g['lr'] + delta_lr)
 
   def log_hyperparams(self):
-    self.param_logs['lr'].append(self.optim.param_groups[0]['lr'])
+    self.param_logs['lr'].append(self.fetch_lr())
 
   def eval(self, batch_x, batch_y):
     with torch.no_grad():

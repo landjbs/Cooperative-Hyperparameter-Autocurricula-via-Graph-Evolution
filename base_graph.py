@@ -6,24 +6,28 @@ from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
 import torchvision.transforms as transforms
 
-
 from model import Model
 from evolution import generate_graph
+
 
 def build_data_loader(is_train, batch_size):
     download = not os.path.exists('data/MNIST')
     transform = transforms.Compose([transforms.ToTensor(),
                                     transforms.Normalize((0.1307,), (0.3081,))
                                   ])
-    dataset = MNIST('data', train=is_train,
+    dataset = MNIST(root='data', train=is_train,
                     transform=transform, download=download)
     return DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 
 class Graph(object):
-  def __init__(self, n, train_batch_size=64, eval_batch_size=64):
+  def __init__(self, n, type, flag, train_batch_size=60, eval_batch_size=60):
+    # models
     self.n = n
     self.models = [Model(id) for id in range(n)]
+    # graph
+    (self.adjMat,
+     self.childrenList) = generate_graph(n, type=type, flag=flag)
     # data loading
     self.train_loader = build_data_loader(True, train_batch_size)
     self.eval_loader = build_data_loader(True, eval_batch_size)
@@ -31,7 +35,6 @@ class Graph(object):
     self.global_params = {'fitness': [], 'mean_lr': []}
 
   def get_normed_fitness(self, x_batch, y_batch, track=False):
-    self.adjMat, self.childrenList = generate_graph(self.n,type=type,flag=flag)
     fitnesses = np.array([1.0 / model.eval(x_batch, y_batch)
                           for model in self.models])
     if track:
@@ -49,7 +52,7 @@ class Graph(object):
       p = [fit/fitSum for fit in inv_fitnesses]
       return np.random.choice(range(self.n),size = n_parents, p=p)
 
-  def select_child(self,parent):
+  def select_child(self, parent):
     p = self.adjMat[parent]
     if sum(p) > 0:
       child = np.random.choice(range(self.n), p=p)
