@@ -1,10 +1,8 @@
 import numpy as np
 import torch
-import torchvision
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-import matplotlib.pyplot as plt
 
 
 random_seed = 1
