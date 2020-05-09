@@ -6,12 +6,12 @@ import matplotlib.pyplot as plt
 
 g = Graph(36, type='Funnel', flag=5)
 
-sweep_vals = [0.0000001, 0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 0.5, 1, 5, 10]
+sweep_vals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.1, 0.5, 1, 5, 10]
 final_losses = []
 
 for lr in sweep_vals:
     m = Model(id=0, lr=lr)
-    for _ in trange(100):
+    for _ in trange(500):
         x, y = next(iter(g.train_loader))
         m.step(x, y)
         x, y = next(iter(g.eval_loader))
