@@ -77,7 +77,7 @@ class Graph(object):
 
   def update_models(self, x_eval_batch, y_eval_batch):
     fitnesses = self.get_normed_fitness(x_eval_batch, y_eval_batch, track=True)
-    parents = self.select_parents(fitnesses, self.n_parents)
+    parents = self.select_parents(fitnesses)
     for parent in parents:
         child = self.select_child(parent)
         chil_model = self.models[child]
