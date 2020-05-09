@@ -27,38 +27,44 @@ class Graph(object):
     self.train_loader = build_data_loader(True, train_batch_size)
     self.eval_loader = build_data_loader(True, eval_batch_size)
     # global param tracking
-    self.global_params = {'loss': [], 'mean_lr': []}
+    self.global_params = {'fitness': [], 'mean_lr': []}
 
-  def get_normed_fitness(self, x_batch, y_batch):
+  def get_normed_fitness(self, x_batch, y_batch, track=False):
     fitnesses = np.array([model.eval(x_batch, y_batch)
                           for model in self.models])
+    if track:
+        self.global_params['fitness'].append(np.mean(fitnesses))
     return (fitnesses / self.n)
 
-  def train_models(self, x_batch, y_batch):
+  def step_models(self, x_batch, y_batch):
     for model in self.models:
       model.step(x_batch, y_batch)
+    return True
 
   def update_models(self, x_eval_batch, y_eval_batch):
-    fitnesses = self.get_normed_fitness(x_eval_batch, y_eval_batch)
+    fitnesses = self.get_normed_fitness(x_eval_batch, y_eval_batch, track=True)
     # TODO: some selection stuff for updating models prob uses an adj mat
     for model in self.models:
       # select nums
       # model.update_hyperparams(delta_lr=?) ...
       model.log_hyperparams()
+    return True
 
   def log_global_params(self):
     lr_buffer = []
     for model in self.models:
       lr_buffer.append(model.param_logs['lr'])
     self.global_params['mean_lr'].append(np.mean(lr_buffer))
+    return True
 
   def train(self, steps):
     for step in trange(steps, desc='Training'):
       x_train_batch, y_train_batch = next(iter(self.train_loader))
-      self.train_models(x_train_batch, y_train_batch)
+      self.step_models(x_train_batch, y_train_batch)
       x_eval_batch, y_eval_batch = next(iter(self.eval_loader))
       self.update_models(x_eval_batch, y_eval_batch)
       self.log_global_params()
+    return True
 
   def vis_global_params(self, exclude=[]):
       ''' Plots all globally-tracked params '''
