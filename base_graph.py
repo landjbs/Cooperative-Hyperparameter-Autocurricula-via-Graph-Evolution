@@ -38,7 +38,7 @@ class Graph(object):
     self.global_params = {'fitness': [], 'mean_lr': []}
 
   def get_normed_fitness(self, x_batch, y_batch, track=False):
-    fitnesses = np.array([1.0 / model.eval(x_batch, y_batch)
+    fitnesses = np.array([(model.eval(x_batch, y_batch))
                           for model in self.models])
     if track:
         self.global_params['fitness'].append(np.mean(fitnesses))
