@@ -1,11 +1,12 @@
 from base_graph import Graph
 from model import Model
 
+from tqdm import trange
 
 g = Graph(36, type='Funnel', flag=5)
 m = Model(id=0, lr=0.01)
 
-for _ in range(1000):
+for _ in trange(1000):
     x, y = next(iter(g.train_loader))
     m.step(x, y)
     x, y = next(iter(g.eval_loader))
