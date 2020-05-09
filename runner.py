@@ -15,7 +15,7 @@ for lr in sweep_vals:
         x, y = next(iter(g.train_loader))
         m.step(x, y)
         x, y = next(iter(g.eval_loader))
-        final_losses.append(m.eval(x, y))
+    final_losses.append(m.eval(x, y))
 
 
 plt.plot(sweep_vals, final_losses)
