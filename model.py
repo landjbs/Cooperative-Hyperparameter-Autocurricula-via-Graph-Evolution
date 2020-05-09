@@ -5,7 +5,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import matplotlib.pyplot as plt
-from tqdm import trange, tqdm
 
 n_epochs = 3
 batch_size_train = 64

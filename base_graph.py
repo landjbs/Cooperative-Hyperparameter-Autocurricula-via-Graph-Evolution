@@ -1,3 +1,9 @@
+import numpy as np
+from tqdm import trange, tqdm
+from torch.utils.data import DataLoader
+
+from model import Model
+
 class Graph(object):
   def __init__(self, n):
     self.n = n
@@ -31,7 +37,7 @@ class Graph(object):
     self.global_params['mean_lr'].append(np.mean(lr_buffer))
 
   def train(steps):
-    for step in range(steps):
+    for step in trange(steps, desc='Training'):
       x_train_batch, y_train_batch = next(iter(self.train_loader))
       self.train_models(x_train_batch, y_train_batch)
       x_eval_batch, y_eval_batch = next(iter(self.eval_loader))
