@@ -6,9 +6,9 @@ from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
 import torchvision.transforms as transforms
 
-
 from model import Model
 from evolution import generate_graph
+
 
 def build_data_loader(is_train, batch_size):
     download = not os.path.exists('data/MNIST')
