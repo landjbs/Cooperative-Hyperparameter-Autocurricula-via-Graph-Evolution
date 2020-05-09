@@ -111,13 +111,15 @@ class Graph(object):
       for name, buffer in self.global_params.items():
           if name in exclude:
               continue
-          plt.plot(buffer)
-          plt.title(f'Global - {name}')
-          plt.xlabel('Iteration')
-          plt.ylabel(name)
+          plt.plot(buffer, label=name)
+      plt.title(f'Global Params')
+      plt.xlabel('Iteration')
+      plt.legend()
+      if not root:
+          plt.show()
+      else:
           plt.savefig(f'{root}/global_params')
-          if not root:
-              plt.show()
+          plt.close()
 
   def vis_individual_params(self, root=None):
       ''' Plots graphs of each param across nets '''
@@ -130,9 +132,11 @@ class Graph(object):
           plt.ylabel(name)
           plt.title(f'{name} Across Networks')
           plt.legend()
-          plt.savefig(f'{root}/indiv_params_{name}')
           if not root:
               plt.show()
+          else:
+              plt.savefig(f'{root}/indiv_params_{name}')
+              plt.close()
 
   def vis_all_single_net(self, id, root=None, exclude=[]):
       ''' Plots all params of net with id=id on single graph '''
@@ -145,6 +149,8 @@ class Graph(object):
           plt.plot(buffer, label=name)
       plt.title(f'Params for {model}')
       plt.xlabel('Iteration')
-      plt.savefig(f'{root}/model_params_{model}')
       if not root:
           plt.show()
+      else:
+          plt.savefig(f'{root}/model_params_{model}')
+          plt.close()
