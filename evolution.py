@@ -40,25 +40,71 @@ def generate_graph(N, type = "Moran", flag=None):
 
     return adjMat, childrenList
 
-# this should probably be reimplemented as an object method
-def run_iteration(vertexValues, vertexMomentums, vertexFitnesses, adjMat, n=1, flag=None):
-
+def visualize_structure(vertexValues, childrenList, type=None, flag=None, exclude = []):
     N = len(vertexValues)
+    positions = [(0,0) for _ in range(N)]
 
-    fitSum = float(sum(vertexFitnesses))
-    p = [fit/fitSum for fit in vertexFitnesses]
-    reproducing = np.random.choice(range(N),size=n,p=p)
+    if type == "Moran":
+        delta = 2*np.pi/N
+        for i in range(N):
+            positions[i] = (math.cos(delta*i),math.sin(delta*i))
 
-    for parent in reproducing:
-        p = adjMat[parent]
-        if sum(p) > 0:
-            child = np.random.choice(range(N), p=p)
-            vertexValues = updateValue(vertexValues, parent, child, vertexMomentums[parent], flag=flag)
+    if type == "Funnel":
+        numLayers = math.ceil(math.log(N,flag))
+        layer = 1
+        delta = 0
+        oldStart = 0
+        oldStop = 1
+        for i in range(1,N):
+            if delta >= flag ** layer:
+                layer += 1
+                delta = 0
+                oldStart = oldStop
+                oldStop = i
+            x = (delta+1)/(flag**layer + 1)
+            y = layer/(numLayers + 1)
+            positions[i] = (x,y)
+            delta += 1
 
-            vertexMomentums[parent] += 1
-            vertexMomentums[child] = 0 # should this be set to parent momentum?
+        positions[0] = (0.5,0)
+        exclude.append(0)
 
-    return None
+    if type == "Superfan":
+        numLayers = math.ceil(math.log(N,flag))
+        layer = 1
+        delta = 0
+        oldStart = 0
+        oldStop = 1
+        for i in range(1,N):
+            if delta >= flag ** layer:
+                layer += 1
+                delta = 0
+                oldStart = oldStop
+                oldStop = i
+
+            layerSize = flag**(layer-1)
+            theta1 = (delta//layerSize)*2*np.pi/flag
+            frac = 2*np.pi/flag/numLayers
+            theta2 = (layer-1)*frac
+            theta3 = (delta%layerSize)*(frac/layerSize)
+            r = ((delta%layerSize)+1)/layerSize
+            theta = theta1 + theta2 + theta3
+            positions[i] = (r*math.cos(theta),r*math.sin(theta))
+            delta += 1
+
+        positions[0] = (0,0)
+
+    for i in range(N):
+        plt.scatter(positions[i][0], positions[i][1],c='K')
+        if i in exclude:
+            print(i)
+            continue
+        else:
+            for j in childrenList[i]:
+                dx = positions[j][0] - positions[i][0]
+                dy = positions[j][1] - positions[i][1]
+                plt.arrow(positions[i][0],positions[i][1],dx,dy)
+    plt.show()
 
 # currently not set
 def updateValue(vertexValues, parent, child, momentum, flag=None):
@@ -73,13 +119,13 @@ if __name__=='__main__':
     N = 156
     iter = 100
     n = 5
-    
+
     vertexValues = [1 for _ in range(N-1)]
     vertexValues.append(1.5)
     vertexMomentums = [0 for _ in range(N)]
-    
+
     adjMat, childrenList = generate_graph(N, "Funnel")
-    
+
     for it in range(iter):
         vertexFitnesses = [value for value in vertexValues]
         # print(vertexFitnesses)
