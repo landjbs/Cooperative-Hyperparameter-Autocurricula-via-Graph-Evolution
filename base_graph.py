@@ -25,7 +25,7 @@ class Graph(object):
   def __init__(self, n, type, flag, train_batch_size=60, eval_batch_size=60):
     # models
     self.n = n
-    self.c = 0.3
+    self.c = 0.1
     self.models = [Model(id) for id in range(n)]
     self.n_parents = floor(n / 3.)
     # graph
@@ -71,7 +71,7 @@ class Graph(object):
         delta_param = -1
     delta_param *= self.c
     log_child_param = log(child_param) - log(1 - child_param)
-    log_child_param += delta_param
+    log_child_param += np.tanh(delta_param)
     child_param = 1.0 / (1 + exp(-log_child_param))
     return child_param
 

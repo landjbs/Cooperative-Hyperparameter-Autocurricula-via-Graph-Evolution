@@ -66,22 +66,23 @@ def updateValue(vertexValues, parent, child, momentum, flag=None):
     return vertexValues
 
 
-'''
-sample experiment
-'''
-N = 156
-iter = 100
-n = 5
-
-vertexValues = [1 for _ in range(N-1)]
-vertexValues.append(1.5)
-vertexMomentums = [0 for _ in range(N)]
-
-adjMat, childrenList = generate_graph(N, "Funnel")
-
-for it in range(iter):
-    vertexFitnesses = [value for value in vertexValues]
-    # print(vertexFitnesses)
-    run_iteration(vertexValues, vertexMomentums, vertexFitnesses, adjMat, n=n)
-    print(it)
-print(vertexValues)
+if __name__=='__main__':
+    '''
+    sample experiment
+    '''
+    N = 156
+    iter = 100
+    n = 5
+    
+    vertexValues = [1 for _ in range(N-1)]
+    vertexValues.append(1.5)
+    vertexMomentums = [0 for _ in range(N)]
+    
+    adjMat, childrenList = generate_graph(N, "Funnel")
+    
+    for it in range(iter):
+        vertexFitnesses = [value for value in vertexValues]
+        # print(vertexFitnesses)
+        run_iteration(vertexValues, vertexMomentums, vertexFitnesses, adjMat, n=n)
+        print(it)
+        print(vertexValues)
