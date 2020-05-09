@@ -11,7 +11,9 @@ def generate_graph(N, type = "Moran", flag=None):
                     vertex[j] = 1.0/(N - 1)
                     childrenList[i].append(j)
 
+    # Funnel type densely connected layers of exponential size
     if type == "Funnel":
+        # flag used to specify multiplier between layers
         if flag is None:
             flag = 5
         layer = 1
@@ -24,12 +26,13 @@ def generate_graph(N, type = "Moran", flag=None):
                 delta = 0
                 oldStart = oldStop
                 oldStop = i
-
+            # each layer densely connected to layer below
             p = 1.0/(oldStop - oldStart)
             for j in range(oldStart,oldStop):
                 adjMat[i][j] = p
                 childrenList[i].append(j)
             delta += 1
+        # bottom vertex densely connected to top layer
         p = 1.0/(N - oldStop)
         for j in range(oldStop,N):
             adjMat[0][j] = p
@@ -37,6 +40,7 @@ def generate_graph(N, type = "Moran", flag=None):
 
     return adjMat, childrenList
 
+# this should probably be reimplemented as an object method
 def run_iteration(vertexValues, vertexMomentums, vertexFitnesses, adjMat, n=1, flag=None):
 
     N = len(vertexValues)
@@ -62,12 +66,15 @@ def updateValue(vertexValues, parent, child, momentum, flag=None):
     return vertexValues
 
 
-
+'''
+sample experiment
+'''
 N = 156
 iter = 2000
 n = 5
 
-vertexValues = [np.random.uniform(0.7,1.3) for _ in range(N)]
+vertexValues = [1 for _ in range(N-1)]
+vertexValues.append(1.5)
 vertexMomentums = [0 for _ in range(N)]
 
 adjMat, childrenList = generate_graph(N, "Funnel")
