@@ -75,7 +75,8 @@ class Graph(object):
   def vis_individual_params(self):
       for name, buffer in self.models[0].param_logs.items():
           for model in self.models:
-              plt.plot(model.param_logs[name])
+              plt.plot(model.param_logs[name], label=str(model))
           plt.xlabel('Iteration')
           plt.ylabel(name)
+          plt.legend()
           plt.show()

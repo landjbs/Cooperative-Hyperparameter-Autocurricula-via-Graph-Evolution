@@ -24,6 +24,9 @@ class Model(nn.Module):
     self.losses = []
     self.param_logs = {'lr': []}
 
+  def __repr__(self):
+      return 'Model'
+
   def forward(self, x):
     x = F.relu(F.max_pool2d(self.conv1(x), 2))
     x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
