@@ -31,7 +31,8 @@ class Graph(object):
     self.global_params = {'mean_lr': []}
 
   def get_normed_fitness(self, x_batch, y_batch):
-    fitnesses = np.array([model.eval(x_batch, y_batch) for model in self.models])
+    fitnesses = np.array([model.eval(x_batch, y_batch)
+                          for model in self.models])
     return (fitnesses / self.n)
 
   def train_models(self, x_batch, y_batch):
@@ -43,7 +44,7 @@ class Graph(object):
     # TODO: some selection stuff for updating models prob uses an adj mat
     for model in self.models:
       # select nums
-      # model.update_hyperparams() ...
+      # model.update_hyperparams(delta_lr=?) ...
       model.log_hyperparams()
 
   def log_global_params(self):
@@ -59,3 +60,13 @@ class Graph(object):
       x_eval_batch, y_eval_batch = next(iter(self.eval_loader))
       self.update_models(x_eval_batch, y_eval_batch)
       self.log_global_params()
+
+  def vis_global_params(self, exclude=[]):
+      for name, buffer in self.global_params.items():
+          if name in exclude:
+              continue
+          plt.plot(buffer)
+          plt.title(f'Global - {name}')
+          plt.xlabel('Iteration')
+          plt.ylabel(name)
+          plt.show()
