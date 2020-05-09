@@ -6,11 +6,8 @@ import torch.nn.functional as F
 import torch.optim as optim
 import matplotlib.pyplot as plt
 
-n_epochs = 3
 batch_size_train = 64
 batch_size_test = 1000
-learning_rate = 0.01
-log_interval = 10
 
 random_seed = 1
 torch.backends.cudnn.enabled = False

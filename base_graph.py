@@ -1,16 +1,26 @@
 import numpy as np
 from tqdm import trange, tqdm
 from torch.utils.data import DataLoader
+from torchvision.datasets import MNIST
+import torchvision.transforms as transforms
 
 from model import Model
 
+
+def build_data_loader(is_train, batch_size):
+    return DataLoader(MNIST('/files/', train=is_train,
+        transform=transforms.Compose([transforms.ToTensor(),
+                    transforms.Normalize((0.1307,), (0.3081,))])),
+        batch_size=batch_size, shuffle=True)
+
+
 class Graph(object):
-  def __init__(self, n):
+  def __init__(self, n, train_batch_size, eval_batch_size):
     self.n = n
     self.models = [Model() for model in range(n)]
     # data loading
-    self.train_loader = train_loader
-    self.eval_loader = test_loader
+    self.train_loader = build_data_loader(True, train_batch_size)
+    self.eval_loader = build_data_loader(True, eval_batch_size)
     # global param tracking
     self.global_params = {'mean_lr': []}
 
