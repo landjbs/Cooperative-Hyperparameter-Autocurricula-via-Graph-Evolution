@@ -6,8 +6,9 @@ from torch.utils.data import DataLoader
 from torchvision.datasets import MNIST
 import torchvision.transforms as transforms
 
-from model import Model
 
+from model import Model
+from evolution import generate_graph
 
 def build_data_loader(is_train, batch_size):
     download = not os.path.exists('data/MNIST')
@@ -30,6 +31,7 @@ class Graph(object):
     self.global_params = {'fitness': [], 'mean_lr': []}
 
   def get_normed_fitness(self, x_batch, y_batch, track=False):
+    self.adjMat, self.childrenList = generate_graph(self.n,type=type,flag=flag)
     fitnesses = np.array([model.eval(x_batch, y_batch)
                           for model in self.models])
     if track:
@@ -40,6 +42,18 @@ class Graph(object):
     for model in self.models:
       model.step(x_batch, y_batch)
     return True
+
+  def select_parents(self, fitnesses, n_parents):
+      inv_fitnesses = [1.0/fit for fit in fitnesses]
+      fitSum = sum(inv_fitnesses)
+      p = [fit/fitSum for fit in inv_fitnesses]
+      return np.random.choice(range(self.n),size = n_parents, p=p)
+
+  def select_child(self,parent):
+      p = self.adjMat[parent]
+      if sum(p) > 0:
+          child = np.random.choice(range(self.n), p=p)
+      return child
 
   def update_models(self, x_eval_batch, y_eval_batch):
     fitnesses = self.get_normed_fitness(x_eval_batch, y_eval_batch, track=True)
