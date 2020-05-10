@@ -65,7 +65,17 @@ def generate_graph(N, type = "Moran", flag=None):
 
     return adjMat, childrenList
 
-def visualize_structure(childrenList, type=None, flag=None, exclude = []):
+def color_by_lr(lr_list):
+    hot = max(lr_list)
+    cold = min(lr_list)
+    color_list = []
+    for lr in lr_list:
+        heat = lr/(hot - cold)
+        val = (heat,0.5*heat,1-heat)
+        color_list.append(val)
+    return color_list
+
+def visualize_structure(lrs, childrenList, type=None, flag=None, exclude = []):
     N = len(childrenList)
     positions = [(0,0) for _ in range(N)]
 
@@ -119,8 +129,9 @@ def visualize_structure(childrenList, type=None, flag=None, exclude = []):
 
         positions[0] = (0,0)
 
+    color_list = color_by_lr(lrs)
     for i in range(N):
-        plt.scatter(positions[i][0], positions[i][1],c='K')
+        plt.scatter(positions[i][0], positions[i][1],c=color_list[i])
         if i in exclude:
             print(i)
             continue

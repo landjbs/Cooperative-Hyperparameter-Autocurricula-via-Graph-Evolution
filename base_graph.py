@@ -120,7 +120,8 @@ class Graph(object):
                 self.flag = target_flag
                 (self.adjMat,
                  self.childrenList) = generate_graph(self.n,self.type,self.flag)
-            visualize_structure(self.childrenList,type=self.type,flag=self.flag)
+            lrs - self.list_model_lrs()
+            visualize_structure(lrs, self.childrenList,type=self.type,flag=self.flag)
             for step in trange(steps, desc="ScheduledTraining"):
                 x_train_batch, y_train_batch = next(iter(self.train_loader))
                 self.step_models(x_train_batch, y_train_batch)
