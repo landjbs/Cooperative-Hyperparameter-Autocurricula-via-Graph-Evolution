@@ -28,7 +28,7 @@ class Graph(object):
     self.c = 0.3
     self.models = [Model(id) for id in range(n)]
     self.retired_models = []
-    self.n_parents = n # floor(n / 2.)
+    self.n_parents = floor(n / 2.)
     self.type = type
     self.flag = flag
     # graph
