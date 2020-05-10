@@ -28,6 +28,8 @@ class Graph(object):
     self.c = 0.9
     self.models = [Model(id) for id in range(n)]
     self.n_parents = floor(n / 3.)
+    self.type = type
+    self.flag = flag
     # graph
     (self.adjMat,
      self.childrenList) = generate_graph(n, type=type, flag=flag)
@@ -87,7 +89,7 @@ class Graph(object):
         child_model.update_hyperparams(child_param)
     for model in self.models:
         model.log_hyperparams()
-    return True
+    return fitnesses
 
   def log_global_params(self):
     lr_buffer = []
@@ -96,13 +98,37 @@ class Graph(object):
     self.global_params['mean_lr'].append(np.mean(lr_buffer))
     return True
 
-  def train(self, steps):
-    for step in trange(steps, desc='Training'):
-      x_train_batch, y_train_batch = next(iter(self.train_loader))
-      self.step_models(x_train_batch, y_train_batch)
-      x_eval_batch, y_eval_batch = next(iter(self.eval_loader))
-      self.update_models(x_eval_batch, y_eval_batch)
-      self.log_global_params()
+  def train(self, steps,schedule=None):
+    if schedule is not None:
+        for step in trange(steps, desc='Training'):
+          x_train_batch, y_train_batch = next(iter(self.train_loader))
+          self.step_models(x_train_batch, y_train_batch)
+          x_eval_batch, y_eval_batch = next(iter(self.eval_loader))
+          self.update_models(x_eval_batch, y_eval_batch)
+          self.log_global_params()
+    else:
+        for item, plan in enumerate(schedule):
+            steps = plan[0]
+            target_n = plan[1]
+            target_flag = plan[2]
+            n_diff = self.n - target_n
+            if target_flag != self.flag:
+                self.flag = target_flag
+                (self.adjMat,
+                 self.childrenList) = generate_graph(self.n,self.type,self.flag)
+            for step in trange(steps, desc="ScheduledTraining"):
+                x_train_batch, y_train_batch = next(iter(self.train_loader))
+                self.step_models(x_train_batch, y_train_batch)
+                x_eval_batch, y_eval_batch = next(iter(self.eval_loader))
+                fitnesses = self.update_models(x_eval_batch, y_eval_batch)
+                self.log_global_params()
+
+                # at a time step remove the least fit
+                if n_diff > 0 and (step % (steps//n_diff) == 0):
+                    val, idx = min((val, idx) for (idx, val) in enumerate(fitnesses))
+                    self.models.pop(idx)
+                (self.adjMat,
+                 self.childrenList) = generate_graph(self.n,self.type,self.flag)
     return True
 
   def vis_global_params(self, root=None, exclude=[]):

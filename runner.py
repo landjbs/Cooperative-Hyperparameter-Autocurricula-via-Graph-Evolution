@@ -25,7 +25,7 @@ g = Graph(36, type='Funnel', flag=5)
 # plt.savefig('lr_sweep')
 # plt.show()
 
-g.train(500)
+g.train(50,schedule=[(10,31,5),(10,21,5),(10,13,4),(10,8,3),(10,8,7)])
 g.vis_global_params(root='shorter')
 g.vis_individual_params(root='shorter')
 g.vis_all_single_net(id=0, root='shorter')
