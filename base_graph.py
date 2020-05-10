@@ -8,7 +8,7 @@ import torchvision.transforms as transforms
 from math import log, exp, floor
 
 from model import Model
-from evolution import generate_graph
+from evolution import generate_graph, visualize_structure
 
 
 def build_data_loader(is_train, batch_size):
@@ -129,6 +129,7 @@ class Graph(object):
                     self.models.pop(idx)
                 (self.adjMat,
                  self.childrenList) = generate_graph(self.n,self.type,self.flag)
+            visualize_structure(self.childrenList,type=self.type,flag=self.flag)
     return True
 
   def vis_global_params(self, root=None, exclude=[]):
