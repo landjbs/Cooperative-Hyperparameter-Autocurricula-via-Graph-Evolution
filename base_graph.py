@@ -96,9 +96,7 @@ class Graph(object):
       return [model.param_logs['lr'][-1] for model in self.models]
 
   def log_global_params(self):
-    lr_buffer = []
-    for model in self.models:
-      lr_buffer.append(model.param_logs['lr'][-1])
+    lr_buffer = self.list_model_lrs()
     self.global_params['mean_lr'].append(np.mean(lr_buffer))
     return True
 
