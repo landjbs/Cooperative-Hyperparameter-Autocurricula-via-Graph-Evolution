@@ -27,13 +27,13 @@ class Graph(object):
     self.n = n
     self.c = 0.3
     self.models = [Model(id) for id in range(n)]
-    self.n_parents = floor(n / 2.)
+    self.retired_models = []
+    self.n_parents = n # floor(n / 2.)
     self.type = type
     self.flag = flag
     # graph
     (self.adjMat,
      self.childrenList) = generate_graph(n, type=type, flag=flag)
-    print(self.adjMat)
     # data loading
     self.train_loader = build_data_loader(True, train_batch_size)
     self.eval_loader = build_data_loader(True, eval_batch_size)
@@ -134,7 +134,7 @@ class Graph(object):
                     if (step%(steps//n_diff)==(steps//(n_diff))-1):
                         val, idx = min((val, idx) for (idx, val)
                                        in enumerate(fitnesses))
-                        self.models.pop(idx)
+                        self.retired_models.append(self.models.pop(idx))
                         self.n -= 1
                 (self.adjMat,
                  self.childrenList) = generate_graph(self.n,self.type,self.flag)
@@ -163,14 +163,13 @@ class Graph(object):
       if not os.path.exists(root):
           os.mkdir(root)
       for name, buffer in self.models[0].param_logs.items():
-          for model in self.models:
+          for model in (self.models + self.retired_models):
               plt.plot(model.param_logs[name], label=str(model))
           if 'lr' in name:
-              plt.xscale('log')
+              plt.yscale('log')
           plt.xlabel('Iteration')
           plt.ylabel(name)
           plt.title(f'{name} Across Networks')
-          plt.legend()
           if not root:
               plt.show()
           else:

@@ -6,16 +6,19 @@ import matplotlib.pyplot as plt
 
 g = Graph(31, type='Superfan', flag=5)
 
-sweep_vals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.4, 0.5, 1, 5, 10]
+sweep_vals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.03, 0.05, 0.08, 0.1, 0.2,
+              0.5, 1, 5, 10]
 final_losses = []
 
-g.train(schedule=[(10,31,5),(10,21,5),(100,13,4),(100,8,3),(500,8,7)])
+g.train(schedule=[(50,31,5),(50,21,5),(100,13,4),(100,8,3),(100,8,7), (1,1,7)])
+print(len(g.models))
+winner = g.models[0].id
 g.vis_global_params(root='schedule')
 g.vis_individual_params(root='schedule')
-g.vis_all_single_net(id=0, root='schedule')
+g.vis_all_single_net(id=winner, root='schedule')
 
 converged_loss = g.global_params['mean_lr'][-1]
-
+print(f'converged at: {converged_loss}')
 for lr in sweep_vals:
     m = Model(id=0, lr=lr)
     for _ in trange(1000):
