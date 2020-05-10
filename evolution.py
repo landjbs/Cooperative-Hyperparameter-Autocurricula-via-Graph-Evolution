@@ -76,7 +76,7 @@ def color_by_lr(lr_list):
         color_list.append(val)
     return color_list
 
-def visualize_structure(lrs, childrenList, type=None, flag=None, exclude=[]):
+def visualize_structure(title, lrs, childrenList, type=None, flag=None, exclude=[]):
     N = len(childrenList)
     positions = [(0,0) for _ in range(N)]
 
@@ -101,7 +101,6 @@ def visualize_structure(lrs, childrenList, type=None, flag=None, exclude=[]):
             y = layer/(numLayers + 1)
             positions[i] = (x,y)
             delta += 1
-
         positions[0] = (0.5,0)
         exclude.append(0)
 
@@ -141,7 +140,10 @@ def visualize_structure(lrs, childrenList, type=None, flag=None, exclude=[]):
                 dx = positions[j][0] - positions[i][0]
                 dy = positions[j][1] - positions[i][1]
                 plt.arrow(positions[i][0],positions[i][1],dx,dy)
-    plt.show()
+    plt.axis('off')
+    plt.title(f'Item - {title}')
+    plt.savefig(f'struct_vis/{title}')
+    plt.close()
 
 # currently not set
 def updateValue(vertexValues, parent, child, momentum, flag=None):

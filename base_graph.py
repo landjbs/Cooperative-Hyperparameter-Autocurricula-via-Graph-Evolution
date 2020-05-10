@@ -111,7 +111,6 @@ class Graph(object):
     else:
         assert steps is None, 'Cannot train with both schedule and steps.'
         for item, plan in enumerate(schedule):
-            print(item)
             steps = plan[0]
             target_n = plan[1]
             target_flag = plan[2]
@@ -121,7 +120,8 @@ class Graph(object):
                 (self.adjMat,
                  self.childrenList) = generate_graph(self.n,self.type,self.flag)
             lrs = self.list_model_lrs()
-            visualize_structure(lrs, self.childrenList,type=self.type,flag=self.flag)
+            visualize_structure(item, lrs, self.childrenList,
+                                type=self.type,flag=self.flag)
             for step in trange(steps, desc="ScheduledTraining"):
                 x_train_batch, y_train_batch = next(iter(self.train_loader))
                 self.step_models(x_train_batch, y_train_batch)
