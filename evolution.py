@@ -40,6 +40,29 @@ def generate_graph(N, type = "Moran", flag=None):
             adjMat[0][j] = p
             childrenList[0].append(j)
 
+    if type == 'Superfan':
+        if flag is None:
+            flag = 5
+        layer = 1
+        delta = 0
+        oldStart = 0
+        oldStop = 1
+        for i in range(1,N):
+            if delta >= flag ** layer:
+                layer += 1
+                delta = 0
+                oldStart = oldStop
+                oldStop = i
+
+            j = delta//flag + oldStart
+            adjMat[i][j] = 1.0
+            childrenList[i].append(j)
+            delta += 1
+        p = 1.0/(N - oldStop)
+        for j in range(oldStop,N):
+            adjMat[0][j] = p
+            childrenList[0].append(j)
+
     return adjMat, childrenList
 
 def visualize_structure(childrenList, type=None, flag=None, exclude = []):
