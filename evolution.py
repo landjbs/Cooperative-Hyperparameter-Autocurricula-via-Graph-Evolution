@@ -142,7 +142,7 @@ def visualize_structure(title, lrs, childrenList, type=None, flag=None, exclude=
                 plt.arrow(positions[i][0],positions[i][1],dx,dy)
     plt.axis('off')
     plt.title(f'Item - {title}')
-    plt.savefig(f'struct_vis/{title}')
+    plt.savefig(f'struct_vis_{title}')
     plt.close()
 
 # currently not set
