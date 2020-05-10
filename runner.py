@@ -4,7 +4,7 @@ from model import Model
 from tqdm import trange
 import matplotlib.pyplot as plt
 
-g = Graph(31, type='Funnel', flag=5)
+g = Graph(31, type='Superfan', flag=5)
 
 # sweep_vals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.4, 0.5, 1, 5, 10]
 # final_losses = []
@@ -34,4 +34,4 @@ g = Graph(31, type='Funnel', flag=5)
 # plt.show()
 
 
-g.train(50, schedule=[(10,31,5),(10,21,5),(10,13,4),(10,8,3),(10,8,7)])
+g.train(500, schedule=[(100,31,5),(100,21,5),(100,13,4),(100,8,3),(100,8,7)])

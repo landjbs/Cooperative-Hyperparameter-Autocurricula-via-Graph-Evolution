@@ -33,6 +33,7 @@ class Graph(object):
     # graph
     (self.adjMat,
      self.childrenList) = generate_graph(n, type=type, flag=flag)
+    print(self.adjMat)
     # data loading
     self.train_loader = build_data_loader(True, train_batch_size)
     self.eval_loader = build_data_loader(True, eval_batch_size)
@@ -98,7 +99,7 @@ class Graph(object):
     self.global_params['mean_lr'].append(np.mean(lr_buffer))
     return True
 
-  def train(self, steps,schedule=None):
+  def train(self, steps=None, schedule=None):
     if schedule is None:
         for step in trange(steps, desc='Training'):
           x_train_batch, y_train_batch = next(iter(self.train_loader))
@@ -107,6 +108,7 @@ class Graph(object):
           self.update_models(x_eval_batch, y_eval_batch)
           self.log_global_params()
     else:
+        assert steps is None, 'Cannot train with both schedule and steps.'
         for item, plan in enumerate(schedule):
             print(item)
             steps = plan[0]
@@ -127,10 +129,7 @@ class Graph(object):
 
                 # at a time step remove the least fit
                 if (n_diff > 0):
-                    print(f'n_diff {n_diff}')
-                    print(step%(steps//n_diff), (steps//n_diff)-1)
                     if (step%(steps//n_diff)==(steps//(n_diff))-1):
-                        print('if')
                         val, idx = min((val, idx) for (idx, val)
                                        in enumerate(fitnesses))
                         self.models.pop(idx)
