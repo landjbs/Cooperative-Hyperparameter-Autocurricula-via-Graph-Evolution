@@ -6,13 +6,13 @@ import matplotlib.pyplot as plt
 
 g = Graph(31, type='Superfan', flag=5)
 
-# sweep_vals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.4, 0.5, 1, 5, 10]
-# final_losses = []
+sweep_vals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.4, 0.5, 1, 5, 10]
+final_losses = []
 
-# g.train(1000)
-# g.vis_global_params(root='shorter')
-# g.vis_individual_params(root='shorter')
-# g.vis_all_single_net(id=0, root='shorter')
+g.train(schedule=[(10,31,5),(10,21,5),(100,13,4),(100,8,3),(500,8,7)])
+g.vis_global_params(root='schedule')
+g.vis_individual_params(root='schedule')
+g.vis_all_single_net(id=0, root='schedule')
 
 # converged_loss = g.global_params['mean_lr'][-1]
 
@@ -32,6 +32,3 @@ g = Graph(31, type='Superfan', flag=5)
 # plt.ylabel('Validation Loss After 500 Iterations')
 # plt.savefig('lr_sweep')
 # plt.show()
-
-
-g.train(500, schedule=[(100,31,5),(100,21,5),(100,13,4),(100,8,3),(100,8,7)])

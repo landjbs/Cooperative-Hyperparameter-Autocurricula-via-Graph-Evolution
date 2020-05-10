@@ -92,6 +92,9 @@ class Graph(object):
         model.log_hyperparams()
     return fitnesses
 
+  def list_model_lrs(self):
+      return [model.param_logs['lr'][-1] for model in self.models]
+
   def log_global_params(self):
     lr_buffer = []
     for model in self.models:
