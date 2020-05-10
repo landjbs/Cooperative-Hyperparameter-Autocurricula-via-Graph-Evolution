@@ -71,7 +71,7 @@ def color_by_lr(lr_list):
     color_list = []
     for lr in lr_list:
         heat = lr/(hot - cold)
-        val = [[int(255*heat), int(255*(0.5*heat)), int(255*(1-heat))]]
+        val = (heat,0.5*heat,1-heat)
         color_list.append(val)
     return color_list
 
@@ -131,8 +131,7 @@ def visualize_structure(lrs, childrenList, type=None, flag=None, exclude = []):
 
     color_list = color_by_lr(lrs)
     for i in range(N):
-        print(color_list[i])
-        plt.scatter(positions[i][0], positions[i][1], cmap=color_list[i])
+        plt.scatter(positions[i][0], positions[i][1],c=color_list[i])
         if i in exclude:
             print(i)
             continue
