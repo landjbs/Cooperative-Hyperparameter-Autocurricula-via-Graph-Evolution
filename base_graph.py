@@ -25,9 +25,9 @@ class Graph(object):
   def __init__(self, n, type, flag, train_batch_size=60, eval_batch_size=60):
     # models
     self.n = n
-    self.c = 0.9
+    self.c = 0.3
     self.models = [Model(id) for id in range(n)]
-    self.n_parents = floor(n / 3.)
+    self.n_parents = floor(n / 2.)
     self.type = type
     self.flag = flag
     # graph
