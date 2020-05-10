@@ -10,7 +10,8 @@ sweep_vals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.03, 0.05, 0.08, 0.1, 0.2
               0.5, 1, 5, 10]
 final_losses = []
 
-g.train(schedule=[(200,31,5),(200,21,5),(200,13,4),(200,8,3),(200,8,7)])
+# g.train(schedule=[(200,31,5),(200,21,5),(200,13,4),(200,8,3),(200,8,7)])
+g.train(1000)
 winner = g.models[0].id
 g.vis_global_params(root='schedule')
 g.vis_individual_params(root='schedule')
