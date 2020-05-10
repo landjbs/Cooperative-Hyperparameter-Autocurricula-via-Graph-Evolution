@@ -32,3 +32,6 @@ plt.xlabel('Log Learning Rate')
 plt.ylabel('Validation Loss After 500 Iterations')
 plt.savefig('lr_sweep')
 plt.show()
+
+
+# g.train(50,schedule=[(10,31,5),(10,21,5),(10,13,4),(10,8,3),(10,8,7)])
