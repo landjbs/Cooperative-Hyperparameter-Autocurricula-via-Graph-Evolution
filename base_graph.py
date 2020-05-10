@@ -125,7 +125,7 @@ class Graph(object):
                 self.log_global_params()
 
                 # at a time step remove the least fit
-                if n_diff > 0 and (step % (steps//n_diff) == 0):
+                if n_diff > 0 and (step%(steps//n_diff)==(step//(n_diff))-1):
                     val, idx = min((val, idx) for (idx, val) in enumerate(fitnesses))
                     self.models.pop(idx)
                     self.n -= 1

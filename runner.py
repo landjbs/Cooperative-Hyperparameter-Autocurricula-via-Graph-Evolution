@@ -4,7 +4,7 @@ from model import Model
 from tqdm import trange
 import matplotlib.pyplot as plt
 
-g = Graph(36, type='Funnel', flag=5)
+g = Graph(31, type='Funnel', flag=5)
 
 # sweep_vals = [0.000001, 0.00001, 0.0001, 0.001, 0.01, 0.4, 0.5, 1, 5, 10]
 # final_losses = []
