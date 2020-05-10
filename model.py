@@ -16,7 +16,7 @@ class Model(nn.Module):
     self.id = id
     # initialize hyper params
     # np.random.lognormal()
-    self.init_lr = np.random.lognormal(0.001, 2) if not lr else lr
+    self.init_lr = np.random.uniform(0, 1) if not lr else lr
     print(self.init_lr)
     self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
     self.conv2 = nn.Conv2d(10, 20, kernel_size=5)

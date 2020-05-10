@@ -71,7 +71,7 @@ def color_by_lr(lr_list):
     color_list = []
     for lr in lr_list:
         heat = lr/(hot - cold)
-        val = (heat,0.5*heat,1-heat)
+        val = [int(255*heat), int(255*(0.5*heat)), int(255*(1-heat))]
         color_list.append(val)
     return color_list
 
