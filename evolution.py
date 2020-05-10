@@ -71,8 +71,11 @@ def color_by_lr(lr_list):
     color_list = []
     for lr in lr_list:
         heat = lr/(hot - cold)
-        val = (heat,0.5*heat,1-heat)
-        color_list.append(val)
+        val = [int(255*heat), int(255*(0.5*heat)), int(255*(1-heat))]
+        hexval = 256*2*val[0] + 256*val[1] + val[2]
+        hexval = hex(hexval)
+        print(f"hey this is the hexval: {hexval}")
+        color_list.append(hex)
     return color_list
 
 def visualize_structure(lrs, childrenList, type=None, flag=None, exclude = []):
