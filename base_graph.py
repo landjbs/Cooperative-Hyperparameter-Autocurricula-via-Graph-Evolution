@@ -129,6 +129,8 @@ class Graph(object):
       for name, buffer in self.models[0].param_logs.items():
           for model in self.models:
               plt.plot(model.param_logs[name], label=str(model))
+          if 'lr' in name:
+              plt.xscale('log')
           plt.xlabel('Iteration')
           plt.ylabel(name)
           plt.title(f'{name} Across Networks')
