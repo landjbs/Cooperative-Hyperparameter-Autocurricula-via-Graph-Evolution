@@ -65,7 +65,7 @@ def generate_graph(N, type = "Moran", flag=None):
 
     return adjMat, childrenList
 
-def visualize_structure(childrenList, type=None, flag=None, exclude = []):
+def visualize_structure(lrs, childrenList, type=None, flag=None, exclude = []):
     N = len(childrenList)
     positions = [(0,0) for _ in range(N)]
 
