@@ -1,4 +1,6 @@
 import numpy as np
+import math
+import matplotlib.pyplot as plt
 
 def generate_graph(N, type = "Moran", flag=None):
 

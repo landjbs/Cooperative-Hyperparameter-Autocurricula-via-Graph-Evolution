@@ -99,7 +99,7 @@ class Graph(object):
     return True
 
   def train(self, steps,schedule=None):
-    if schedule is not None:
+    if schedule is None:
         for step in trange(steps, desc='Training'):
           x_train_batch, y_train_batch = next(iter(self.train_loader))
           self.step_models(x_train_batch, y_train_batch)
@@ -108,6 +108,7 @@ class Graph(object):
           self.log_global_params()
     else:
         for item, plan in enumerate(schedule):
+            print(item)
             steps = plan[0]
             target_n = plan[1]
             target_flag = plan[2]
@@ -127,6 +128,7 @@ class Graph(object):
                 if n_diff > 0 and (step % (steps//n_diff) == 0):
                     val, idx = min((val, idx) for (idx, val) in enumerate(fitnesses))
                     self.models.pop(idx)
+                    self.n -= 1
                 (self.adjMat,
                  self.childrenList) = generate_graph(self.n,self.type,self.flag)
             visualize_structure(self.childrenList,type=self.type,flag=self.flag)
