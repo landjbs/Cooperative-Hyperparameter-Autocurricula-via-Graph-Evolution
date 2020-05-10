@@ -27,7 +27,7 @@ class Graph(object):
     self.n = n
     self.c = 0.3
     self.models = [Model(id) for id in range(n)]
-    self.n_parents = floor(n / 3.)
+    self.n_parents = floor(n / 2.)
     # graph
     (self.adjMat,
      self.childrenList) = generate_graph(n, type=type, flag=flag)
