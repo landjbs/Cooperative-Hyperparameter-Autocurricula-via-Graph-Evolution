@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
 
 def generate_graph(N, type = "Moran", flag=None):
 
@@ -70,15 +71,12 @@ def color_by_lr(lr_list):
     cold = min(lr_list)
     color_list = []
     for lr in lr_list:
-        heat = lr/(hot - cold)
-        val = [int(255*heat), int(255*(0.5*heat)), int(255*(1-heat))]
-        hexval = 256*2*val[0] + 256*val[1] + val[2]
-        hexval = hex(hexval)
-        print(f"hey this is the hexval: {hexval}")
-        color_list.append(hex)
+        heat = (lr - cold) / (hot - cold)
+        val = [[float(heat), float(0.5*heat), float(1-heat)]]
+        color_list.append(val)
     return color_list
 
-def visualize_structure(lrs, childrenList, type=None, flag=None, exclude = []):
+def visualize_structure(lrs, childrenList, type=None, flag=None, exclude=[]):
     N = len(childrenList)
     positions = [(0,0) for _ in range(N)]
 
@@ -129,12 +127,12 @@ def visualize_structure(lrs, childrenList, type=None, flag=None, exclude = []):
             theta = theta1 + theta2 + theta3
             positions[i] = (r*math.cos(theta),r*math.sin(theta))
             delta += 1
-
         positions[0] = (0,0)
 
     color_list = color_by_lr(lrs)
     for i in range(N):
-        plt.scatter(positions[i][0], positions[i][1],c=color_list[i])
+        plt.scatter(positions[i][0], positions[i][1], c=color_list[i],
+                    cmap='viridis', zorder=10)
         if i in exclude:
             print(i)
             continue
